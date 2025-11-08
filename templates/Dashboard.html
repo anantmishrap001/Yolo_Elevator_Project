@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lift Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #111;
+            color: white;
+            text-align: center;
+            font-family: Arial;
+        }
+        canvas {
+            width: 80%;
+            height: 400px;
+            margin-top: 40px;
+        }
+        a {
+            color: #8a2be2;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lift Data Dashboard</h1>
+    <a href="/">← Back to Lift View</a>
+    <canvas id="peopleChart"></canvas>
+    <script>
+        async function loadChart() {
+            const res = await fetch('/get_data');
+            const data = await res.json();
+            const labels = data.map(d => d.Timestamp);
+            const peopleCounts = data.map(d => parseInt(d.People_Count));
+
+            new Chart(document.getElementById('peopleChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'People Count Over Time',
+                        data: peopleCounts,
+                        borderColor: '#8a2be2',
+                        fill: false,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    plugins: { legend: { labels: { color: 'white' } } },
+                    scales: {
+                        x: { ticks: { color: 'white' } },
+                        y: { ticks: { color: 'white' } }
+                    }
+                }
+            });
+        }
+        loadChart();
+    </script>
+</body>
+</html>
+1
